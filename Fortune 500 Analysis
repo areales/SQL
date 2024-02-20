@@ -1,4 +1,4 @@
-#This analysis utilized the following Fortune 500 dataset:
+# This analysis utilized the following Fortune 500 dataset:
 
 CREATE TABLE fortune_companies (
     company_id INTEGER PRIMARY KEY,
@@ -59,3 +59,24 @@ VALUES
     ('Company KK', 'Healthcare', 150.2, 3400, 0, 16, 8, 5.3);
 
 # Analysis: 
+# Average revenue per industry
+SELECT industry, AVG(revenue) AS avg_revenue
+FROM fortune_companies
+GROUP BY industry;
+
+# Companies with the most generous maternity leave:
+SELECT company_name, maternity_leave_weeks
+FROM fortune_companies
+ORDER BY maternity_leave_weeks DESC
+LIMIT 5; -- Display the top 5
+
+# Healthcare benefits vs average employee tenure:
+SELECT 
+ CASE WHEN healthcare_benefits = 1 THEN 'Healthcare Provided' 
+      ELSE 'No Healthcare' 
+ END AS benefits_status,
+ AVG(avg_employee_tenure) AS avg_tenure
+FROM fortune_companies
+GROUP BY benefits_status; 
+
+
