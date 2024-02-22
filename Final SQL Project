@@ -233,3 +233,10 @@ JOIN chinook.invoice_items ON tracks.TrackId = invoice_items.TrackId
 GROUP BY genres.GenreId 
 ORDER BY TotalRevenue DESC;
 
+# 8 - List all customers and the playlists they've created
+SELECT
+    customers.FirstName, 
+    customers.LastName, 
+    playlists.Name AS PlaylistName 
+FROM chinook.customers
+JOIN chinook.playlists ON customers.CustomerId = playlists.PlaylistId;
