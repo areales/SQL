@@ -176,3 +176,60 @@ MediaTypeId
 REFERENCES media_types (MediaTypeId) ON DELETE NO ACTION
 ON UPDATE NO ACTION
 );
+
+# SQL QUERIES
+
+# 1 - List all the tracks from the album "Killers"
+SELECT chinook.tracks.Name,
+       chinook.albums.Title
+  FROM chinook.tracks
+       JOIN
+       chinook.albums ON chinook.tracks.AlbumId = chinook.albums.AlbumId
+ WHERE chinook.albums.Title = 'Killers';
+
+
+# 2 - Show all genres available in the store
+SELECT DISTINCT Name
+  FROM chinook.genres;
+
+# 3 - Find customers who live in California
+SELECT FirstName,
+       LastName,
+       City,
+       State
+  FROM chinook.customers
+ WHERE State = 'CA';
+
+# 4 - List employees, along with the name of the employee they report to
+SELECT emp.FirstName AS EmployeeFirstName,
+       emp.LastName AS EmployeeLastName,
+       mgr.FirstName AS ManagerFirstName,
+       mgr.LastName AS ManagerLastName
+  FROM chinook.employees AS emp
+       LEFT JOIN
+       chinook.employees AS mgr ON emp.ReportsTo = mgr.EmployeeId;
+
+# 5 - What is the most expensive track to purchase?
+SELECT Name,
+       UnitPrice
+  FROM chinook.tracks
+ ORDER BY UnitPrice DESC
+ LIMIT 1;
+
+# 6 - How many customers are in each country?
+SELECT Country,
+       COUNT( * ) AS CustomerCount
+  FROM chinook.customers
+ GROUP BY Country
+ ORDER BY CustomerCount DESC;
+
+# 7 - Which genre has generated the most revenue?
+SELECT 
+    genres.Name AS Genre, 
+    SUM(invoice_items.UnitPrice * invoice_items.Quantity) AS TotalRevenue
+FROM chinook.genres
+JOIN chinook.tracks ON genres.GenreId = tracks.GenreId
+JOIN chinook.invoice_items ON tracks.TrackId = invoice_items.TrackId
+GROUP BY genres.GenreId 
+ORDER BY TotalRevenue DESC;
+
