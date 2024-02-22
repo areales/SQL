@@ -240,3 +240,52 @@ SELECT
     playlists.Name AS PlaylistName 
 FROM chinook.customers
 JOIN chinook.playlists ON customers.CustomerId = playlists.PlaylistId;
+
+# 9 - What are the total sales for 2009? 
+SELECT SUM(Total) 
+  FROM chinook.Invoices
+ WHERE InvoiceDate BETWEEN '2009-01-01' AND [2009-12-31];
+
+# 10 - Write a query that includes the purchased track name with each invoice line ID. 
+SELECT t.Name,
+       i.InvoiceLineId
+  FROM chinook.Invoice_items i
+       JOIN
+       chinook.Tracks t ON i.TrackId = t.TrackId;
+
+# 11 - Write a query that includes the purchased track name AND artist name with each invoice line ID 
+SELECT ar.name AS Artist,
+       t.Name AS Track,
+       i.InvoiceLineId
+  FROM chinook.Invoice_items i
+       LEFT JOIN
+       chinook.tracks t ON i.TrackID = t.TrackID
+       INNER JOIN
+       chinook.albums a ON a.AlbumID = t.AlbumID
+       LEFT JOIN
+       chinook.artists ar ON ar.ArtistID = a.ArtistID;
+
+# 12 - Provide a query that shows all the Tracks, and include the Album name, Media type, and Genre. 
+SELECT t.Name AS [Track Name],
+       a.Title AS [Album Title],
+       m.Name AS [Media Type],
+       g.Name AS Genre
+  FROM chinook.tracks t
+       JOIN
+       chinook.Albums a ON a.AlbumId = t.AlbumId
+       JOIN
+       chinook.Media_Types m ON m.MediaTypeId = t.MediaTypeId
+       JOIN
+       chinook.Genres g ON g.GenreId = t.Genre
+
+# 13 - Show the total sales made by each sales agent.
+SELECT emp.FirstName,
+       emp.LastName,
+       ROUND(SUM(Inv.Total), 2) AS [Total Sales]
+  FROM chinook.Employees emp
+       JOIN
+       chinook.Customers cust ON cust.SupportRepId = emp.EmployeeId
+       JOIN
+       chinook.Invoices Inv ON Inv.CustomerId = cust.CustomerId
+ WHERE emp.Title = 'Sales Support Agent'
+ GROUP BY emp.FirstName;
